@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <script type="text/javascript" src="/static/js/main.js"></script>
     <title>Blockchain Game</title>
 
 
@@ -20,11 +21,12 @@
                 <h1>Blockchain Game</h1>
                 <hr style="box-shadow: 2px 2px 10px rgb(255, 255, 255);">
                 <div class="buttoncontainer">
-                    <div class="roundedbutton">
-                        <h2 onclick="window.location.href='/play'">Lets Play</h2>
-                    </div>
-                    <div class="roundedbuttonhelp" style="margin-left:50px;">
+        
+                    <div class="roundedbuttonhelp" >
                         <h2 onClick="document.getElementById('container2').scrollIntoView();" >Rules</h2>
+                    </div>
+                    <div class="roundedbutton" style="margin-left:50px;">
+                        <h2 onclick="window.location.href='/play'">Lets Play</h2>
                     </div>
                 </div>
                 
@@ -35,16 +37,89 @@
     </div>
 
     <div class="container2" id="container2">
+        <!--
         <div class="title_header_white">
             <h1>How to Play</h1>
         </div>
 
 
         <div class="instructionbox">
+            
             <div class="instructions">
 
             </div>
             <img class="isometric2" src='/static/img/isometric2.png'>
+            -->
+            <div class="slider">
+                <input type="radio" name="slider" title="slide1" checked="checked" class="slider__nav"/>
+                <input type="radio" name="slider" title="slide2" class="slider__nav"/>
+                <input type="radio" name="slider" title="slide3" class="slider__nav"/>
+                <input type="radio" name="slider" title="slide4" class="slider__nav"/>
+                <div class="slider__inner">
+
+                  <div class="slider__contents"><i class="slider__image fa fa-codepen"></i>
+                    <div class="title_header_white">
+                        <h1>How to Play</h1>
+                    </div>
+                    
+                    <div class="howto_container">
+                        <div class="howto_container_text">
+                            <h2 class="slider__caption">Enter a game</h2>
+                            <p class="slider__txt">
+                            Connect to your game session through the game ID and enter your username.
+                            Your username will be connected to a private key you can use to sign transactions.
+                        </p>
+                        </div>
+                        <img class="isometric2" src="/static/img/isometric2.png">
+                    </div>
+                  </div>
+
+
+                  <div class="slider__contents"><i class="slider__image fa fa-newspaper-o"></i>
+                    <div class="howto_container">
+                        <div class="howto_container_text">
+                            <h2 class="slider__caption">Transaction Period</h2>
+                            <p class="slider__txt">
+                                Before mining begins, every player is able to send transactions to each other.
+                                During this period you can purchase perks/bonuses or send money to other players.
+                            </p>
+                        </div>
+                        <img class="isometric3" src="/static/img/isometric3.png">
+                    </div>
+                  </div>
+
+                  <div class="slider__contents"><i class="slider__image fa fa-television"></i>
+                    <div class="howto_container">
+                        <div class="howto_container_text">
+                            <h2 class="slider__caption">Start Mining</h2>
+                            <p class="slider__txt">
+                                Once the transaction period is over, the game will start mining.
+                                Input numbers to guess the correct hash for the current block.
+
+                            </p>
+                        </div>
+                        <img class="isometric4" src="/static/img/isometric4.png">
+                    </div>
+                  </div>
+
+                  <div class="slider__contents"><i class="slider__image fa fa-diamond"></i>
+                    <div class="howto_container">
+                        <div class="howto_container_text">
+                            <h2 class="slider__caption">Get Rewarded</h2>
+                            <p class="slider__txt">
+                                The player to first guess the correct hash will verify with the rest of the network.
+                                If the player is correct through a majority vote, they will receive crypto as a reward.
+                            </p>
+                            <div class="roundedbutton2">
+                                <h2 onclick="window.location.href='/play'">Lets Play</h2>
+                            </div>
+                        </div>
+                        <img class="isometric5" src="/static/img/isometric5.png">
+                    </div>
+                    
+                  </div>
+                </div>
+              </div>
             
         </div>
 

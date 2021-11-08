@@ -1,0 +1,181 @@
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0 0 0 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  font-family: "sohne-var", "Helvetica Neue", "Arial", sans-serif;
+}
+
+.container {
+  width: 100%;
+  height: auto;
+  position: relative;
+  background: rgb(83, 93, 201);
+  background: linear-gradient(
+    77deg,
+    rgba(83, 93, 201, 1) 0%,
+    rgb(123, 66, 161) 50%,
+    rgb(161, 63, 153) 90%
+  );
+}
+
+.header {
+  width: 100%;
+  height: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.title {
+  width: 100%;
+  height: 50px;
+  position: relative;
+  margin-top: 20px;
+  left: 0;
+}
+.title a {
+  font-size: 40px;
+  letter-spacing: -1px;
+  font-weight: 500;
+  color: rgb(255, 255, 255);
+  margin: 0 0 0 50px;
+  cursor: pointer;
+}
+.title a:hover {
+  color: rgb(0, 110, 255);
+}
+.maintop {
+  width: 100%;
+  height: 30%;
+  position: relative;
+  top: 85px;
+  left: 0;
+}
+
+.textbox {
+  position: relative;
+  width: 100%;
+  height: 50%;
+  display: flex;
+  justify-content: center;
+}
+.lobby_title {
+  position: relative;
+  margin: 0 auto;
+}
+
+.textbox h1 {
+  font-size: 50px;
+  font-weight: 600;
+  letter-spacing: -2px;
+  margin: 20px 0 0 0;
+  color: rgb(255, 255, 255);
+  text-shadow: rgb(102, 102, 102) 3px 3px 0px;
+  word-spacing: 8px;
+}
+
+.textbox h2 {
+  font-size: 30px;
+  font-weight: 400;
+  letter-spacing: -1px;
+  margin: 10px 0 0 0;
+  color: rgb(255, 255, 255);
+}
+
+.textbox p {
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: -1px;
+  margin: 0px 0 10px 0;
+  color: rgb(255, 255, 255);
+  text-align: center;
+}
+
+.buyingpowerbox {
+  float: right;
+  width: auto;
+  height: 90%;
+  position: relative;
+  background-color: rgb(236, 236, 236);
+  margin-right: 5%;
+  border-radius: 10px;
+  box-shadow: rgb(78, 78, 78) 4px 4px 0px;
+}
+.buyingpowerbox h2 {
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: -1px;
+  margin: 10px 30px 0 30px;
+  color: rgb(0, 0, 0);
+  text-align: center;
+}
+
+.next_button {
+  float: right;
+  margin-right: 50px;
+  width: 10%;
+  height: 50px;
+  align-self: center;
+  border-radius: 10px;
+  border: none;
+  color: #fafafa;
+  font-size: 20px;
+  background-color: rgb(10, 145, 255);
+  cursor: pointer;
+}
+.playercount {
+  float: left;
+  margin-left: 50px;
+  width: 10%;
+  height: 50px;
+  align-self: center;
+  border-radius: 10px;
+  border: none;
+  font-size: 20px;
+  background-color: rgba(215, 234, 255, 0.205);
+}
+.playercount h2 {
+  margin: 10px 10px 0 10px;
+  text-align: center;
+  color: rgb(255, 255, 255);
+  font-size: 20px;
+  font-weight: 400;
+}
+.next_button:hover {
+  cursor: pointer;
+  background-color: rgb(42, 180, 53);
+}
+
+.users_container {
+  position: relative;
+  margin-top: 100px;
+  padding-bottom: 200px;
+}
+.grid-container {
+  display: grid;
+  grid-gap: 50px 50px;
+  grid-template-columns: auto auto auto;
+  width: 80%;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+.grid-item {
+  background-color: rgba(255, 255, 255, 0.137);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  padding: 20px;
+  font-size: 30px;
+  text-align: center;
+}
+.grid-item h2 {
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: -1px;
+  margin: 0px 0 0 0;
+  color: rgb(255, 255, 255);
+}

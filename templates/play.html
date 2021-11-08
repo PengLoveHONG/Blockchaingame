@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mainplay.css') }}">
+    <script type="text/javascript" src="/static/js/main.js"></script>
+    
     <title>Blockchain Game</title>
 
 
@@ -14,7 +16,34 @@
 
 <body>
     <div class="container">
-        <h1> LETS PLAY MOFO </h1>
+
+        <div class="header">
+            <a onclick="window.location.href='/'">Blockchain Game</a>
+        </div>
+        <hr style="width:90%;float:left;", size="2", color=white> 
+
+
+        <div class="login-box">
+            <p> {{error}} </p>
+            <h2>Enter a blockchain</h2>
+
+            <form id="form" action="/play" method="post" autocomplete="off">
+
+                <div class="user-box" id="user-box">
+                    <input type="text" name="username" required="">
+                    <label>Username</label>
+                </div>
+                <div class="buttonbox" id="buttonbox">
+                    <input type="button" class="create" id="create" name="create" value="Create" onclick="createButton()">
+                    <input type="button" class="join" id="join" name="join" value="Join" onclick="joinButton()">
+                </div>
+        
+              <input class="button" type="submit" value="Enter Game" >
+          
+            </form>
+        </div>
+        <img class="isometric7" src="/static/img/isometric7.png">
+        <img class="isometric6" src="/static/img/isometric6.png">
     </div>
 
 </body>
