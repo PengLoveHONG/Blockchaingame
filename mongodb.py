@@ -68,4 +68,4 @@ def balance_query(username, game_name):
 
 "============================================================================"
 #print(user_query("test"))
-print(balance_query("thomas", "test"))
+#print(balance_query("thomas", "test"))

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, request
+from flask import Flask, render_template, redirect, url_for, request, jsonify
 from werkzeug.utils import redirect
 import pymongo
 from pymongo import MongoClient
@@ -55,7 +55,7 @@ def play():
     
 
 
-@application.route('/<game_name>/<username>', methods=["POST", "GET"]) #CREATE A FUNCTION THAT ALTERS THE USERNAME URL SO PEOPLE CANNOT ENTER OTHERS GAME BY NAME
+@application.route('/lobby/<game_name>/<username>', methods=["POST", "GET"]) #CREATE A FUNCTION THAT ALTERS THE USERNAME URL SO PEOPLE CANNOT ENTER OTHERS GAME BY NAME
 def lobby(game_name, username):
 
     #queries the mongodb database and grabs the names within the given game_name
@@ -65,10 +65,24 @@ def lobby(game_name, username):
     return render_template('lobby.html', username=username, game_name=game_name, list_of_players=list_of_players)
 
 
-@application.route('/<game_name>/<username>/game', methods=["POST", "GET"])
+@application.route('/game/<game_name>/<username>/game', methods=["POST", "GET"])
 def game(game_name, username):
     balance = balance_query(username, game_name)
     return render_template('game.html', username=username, game_name=game_name, balance=balance)
+
+
+
+"========================================|   API   |=========================================="
+@application.route("/api_players/<game_name>", methods=["POST"]) #api to get the players in a game for ajax
+def players_api(game_name):
+    list_of_players = user_query(game_name)
+    return jsonify("", render_template("lobby_component.html", game_name=game_name, list_of_players=list_of_players))
+
+@application.route("/api_num_players/<game_name>", methods=["POST"]) #api to get the number of players in a game for ajax):
+def num_players_api(game_name):
+    list_of_players = (user_query(game_name))
+    return jsonify("", render_template("playercount_component.html", list_of_players=list_of_players))
+
 
 if __name__ == "__main__":
     # turn debug off for prodcution deployment

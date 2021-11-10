@@ -8,13 +8,15 @@
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mainlobby.css') }}">
     <script type="text/javascript" src="/static/js/main.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
     <title>Blockchain Game</title>
 
 
 </head>
 
+
 <body>
-    <div class="container">
+    <div class="container" id="main">
         <div class="header">
             <div class="title">
                 <a onclick="window.location.href='/'">Blockchain Game</a>
@@ -26,8 +28,9 @@
         </div>
 
         <div class="maintop">
+            
             <div class="textbox">
-                <div class="playercount">
+                <div class="playercount" id="playercount">
                     <h2> {{(list_of_players|length)}} players </h2>
                 </div>
 
@@ -37,7 +40,7 @@
                     <p>Game ID</p>
                 </div> 
                 
-                <button class="next_button" onclick="window.location.href='/{{game_name}}/{{username}}/game'">
+                <button class="next_button" onclick="window.location.href='/game/{{game_name}}/{{username}}/game'">
                     Start
                 </button>
 
@@ -47,13 +50,47 @@
         </div>
 
         <div class="users_container">
-            <div class="grid-container">
+            <script> 
+                $(function(){
+                    window.setInterval(function(){
+                        loadPlayerAjax('{{game_name}}');
+                        loadPlayerNum('{{game_name}}')
+                    }, 2000)
+
+                    function loadPlayerAjax(game_name) {
+                        $.ajax({
+                            url: `/api_players/${game_name}`,
+                            type: "POST",
+                            datatype: "json",
+                            success: function(data) {
+                                $(playergrid).replaceWith(data);
+                                
+                            }
+                        });
+                    }
+                    function loadPlayerNum(game_name) {
+                        $.ajax({
+                            url: `/api_num_players/${game_name}`,
+                            type: "POST",
+                            datatype: "json",
+                            success: function(data1) {
+                                $(playercount).replaceWith(data1);
+                                
+                                    }
+                        });
+                    }
+                });
+
+                
+            </script>
+
+            <div class="grid-container" id="playergrid">
                 {% for i in range(list_of_players|length) %}
                 <div class="grid-item">
                     <h2>{{list_of_players[i]}}</h2>
                 </div>
                 {% endfor %}
-              </div>
+            </div>
         </div>
     </div>
 </body>

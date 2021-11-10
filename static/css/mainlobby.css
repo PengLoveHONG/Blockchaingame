@@ -21,6 +21,7 @@ body {
     rgb(123, 66, 161) 50%,
     rgb(161, 63, 153) 90%
   );
+  padding-bottom: 320px ;
 }
 
 .header {

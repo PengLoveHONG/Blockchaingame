@@ -47,3 +47,14 @@ function joinButton() {
 
 }
 // ================================================================ //
+
+
+
+// ================================================================ //
+
+//ajax request call to database bringing the data in somesort of interval, asynchronous calls
+//xml https requests = fetch api, promises, 
+
+//build an api endpoint, so the js can make an api endpoint to the flask api endpoint
+//application.route("/<name to query>")
+// ajax is asynchronous js
