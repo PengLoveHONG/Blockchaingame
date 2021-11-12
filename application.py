@@ -5,13 +5,11 @@ from pymongo import MongoClient
 import certifi
 
 from mongdb_connectionstring import connection_string
-from mongodb import game_creation, game_join, user_query, balance_query, add_name
+from mongodb import game_creation, game_join, query_blockchain, user_query, balance_query, add_name, game_info_query, init_blockchain
 
 #REMEMBER TO MAKE A REQUIREMENTS.TXT FILE
 
 application = Flask(__name__)
-
-
 
 @application.route('/', methods=["POST", "GET"])
 def index():
@@ -23,18 +21,33 @@ def play():
 
     if request.method == "POST":
         username = request.form['username']
-        
+
         game_name_create = "NA" #initialize to fill
         game_name_join = "NA"
         
+        """if (connection == "Select network connection level"):
+            error = "Please select a network connection level"
+            return render_template('play.html', error=error)
+
+        if (difficulty == "Select difficulty level"):
+            error = "Please select a difficulty level"
+            return render_template('play.html', error=error)"""
+
         try:
             game_name_create = request.form['GameNameCreate']
         except:
             game_name_join = request.form['GameNameJoin']
 
         if game_name_create != "NA":
-            game_creation(username, game_name_create)
-            return redirect(url_for('lobby', game_name=game_name_create, username=username))
+            difficulty = request.form['difficulty']
+            connection = request.form['connection']
+            if (game_creation(username, game_name_create, difficulty, connection) == False):
+                error = "Game name already exists"
+                return render_template('play.html', error=error)
+            else:
+                init_blockchain(game_name_create, difficulty, connection)
+                game_creation(username, game_name_create, difficulty, connection)
+                return redirect(url_for('lobby', game_name=game_name_create, username=username, difficulty=difficulty, connection=connection))
         
         if game_name_join != "NA":
             if game_join(username, game_name_join) == False: #adds name to db
@@ -43,8 +56,11 @@ def play():
                 if (username in user_query(game_name_join)):
                     return render_template('play.html', error="Username has been taken")
                 else:
-                    add_name(username, game_name_join)
-                    return redirect(url_for('lobby', game_name=game_name_join, username=username))
+                    difficulty = game_info_query(game_name_join)[0]
+                    connection = game_info_query(game_name_join)[1]
+
+                    add_name(username, game_name_join, difficulty, connection)
+                    return redirect(url_for('lobby', game_name=game_name_join, username=username, difficulty=difficulty, connection=connection))
 
         else:
             return render_template('play.html')
@@ -55,20 +71,45 @@ def play():
     
 
 
-@application.route('/lobby/<game_name>/<username>', methods=["POST", "GET"]) #CREATE A FUNCTION THAT ALTERS THE USERNAME URL SO PEOPLE CANNOT ENTER OTHERS GAME BY NAME
-def lobby(game_name, username):
-
-    #queries the mongodb database and grabs the names within the given game_name
-    #the webpage lobby.html should dynamically update with the database, requering aevery 5 seconds
+@application.route('/lobby/<game_name>/<username>/<difficulty>/<connection>', methods=["POST", "GET"]) #CREATE A FUNCTION THAT ALTERS THE USERNAME URL SO PEOPLE CANNOT ENTER OTHERS GAME BY NAME
+def lobby(game_name, username, difficulty, connection):
     list_of_players = user_query(game_name)
+    return render_template('lobby.html', username=username, game_name=game_name, list_of_players=list_of_players, difficulty=difficulty, connection=connection)
+    
 
-    return render_template('lobby.html', username=username, game_name=game_name, list_of_players=list_of_players)
-
-
-@application.route('/game/<game_name>/<username>/game', methods=["POST", "GET"])
+@application.route('/game/<game_name>/<username>', methods=["POST", "GET"])
 def game(game_name, username):
     balance = balance_query(username, game_name)
-    return render_template('game.html', username=username, game_name=game_name, balance=balance)
+    query = query_blockchain(game_name)
+    blockchain_message = query["blockchain_message"]
+    blockchain_hash = query["blockchain_hash"]
+    previous_hash = query["previous_hash"]
+    difficulty = query["difficulty"]
+    connection = query["connection"]
+
+    if difficulty == "two":
+        difficulty_num = "00"
+    elif difficulty == "one":
+        difficulty_num = "0"
+    elif difficulty == "three":
+        difficulty_num = "000"
+    elif difficulty == "four":
+        difficulty_num = "0000"
+
+   
+
+    #create the genesis block, add it to the database, everyone in the game is ajax querying the blockchain database and beginning the sha hash
+
+    return render_template('game.html', 
+                            username=username, 
+                            game_name=game_name, 
+                            balance=balance, 
+                            difficulty=difficulty, 
+                            connection=connection,
+                            blockchain_message=blockchain_message,
+                            blockchain_hash=blockchain_hash,
+                            difficulty_num=difficulty_num
+                             )
 
 
 

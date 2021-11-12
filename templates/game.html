@@ -7,10 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/maingame.css') }}">
-    <script type="text/javascript" src="/static/js/main.js"></script>
+    <script type="text/javascript" src="/static/js/sha256.js"></script>
     <title>Blockchain Game</title>
-
-
 </head>
 
 <body>
@@ -27,11 +25,46 @@
         </div>
 
         <div class="maintop">
-            <div class="textbox">
-                <h1> Hello {{username}} </h1>
-                <h2> Let's get mining. </h2>
-                <p>{{game_name}} Game Name </p>
-               
+            <div class="column1">
+                <div class="instbox">
+                    <h2>The mining difficulty is at {{difficulty}} leading zeros </h2>
+                    <h2 id="difficulty">{{difficulty_num}}</h2>
+                </div>
+            </div>
+
+            <div class="column2">
+                <div class="block">
+                    <p> Blockchain Message</p>
+                    <h2> {{blockchain_message}} </h2>
+                    <p> Blockchain Hash</p>
+                    <h2 id="blockhash"> {{blockchain_hash}} </h2>
+                </div>
+                <div class="miningbox">
+                    <!--create a form that has two vertical buttons, one named random hash, and another named verify-->
+                    <div class="noncewrapper">
+                        <div class="noncevalue" id="noncevalue">
+                            <p>Nonce</p>
+                            <hr style="width:80%;", size="1", color=white>  
+                        </div>
+                        <div class="equalssign">
+                            <img id="arrow" src="/static/img/arrow.png">
+                        </div>
+                        <div class="hashvalue" id="hashvalue">
+                            <p>Hash</p>
+                            <hr style="width:80%;", size="1", color=white> 
+                        </div>
+                    </div>
+
+                    <form action="/mining" method="post" id="miningform" class="miningform">
+                        <input type="button" value="Random Nonce" name="random_hash" onclick="randomNonce()">
+                        <input type="button" value="Verify" name="verify">
+
+                    </form>
+
+                </div>
+            </div>
+
+            <div class="column3">
             </div>
             
         </div>

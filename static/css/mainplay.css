@@ -64,7 +64,7 @@ body {
   top: 50%;
   left: 50%;
   width: 400px;
-  padding: 40px;
+  padding: 25px;
   transform: translate(-50%, -50%);
   background: rgba(0, 0, 0, 0.5);
   box-sizing: border-box;
@@ -95,7 +95,7 @@ body {
   padding: 10px 0;
   font-size: 16px;
   color: #fff;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   border: none;
   border-bottom: 1px solid #fff;
   outline: none;
@@ -190,4 +190,16 @@ input[type="button"]:hover {
 .buttonbox {
   display: inline-flex;
   margin: auto;
+}
+
+select {
+  width: 100%;
+  padding: 10px 0;
+  font-size: 16px;
+  color: #fff;
+  margin-bottom: 30px;
+  border: none;
+  border-bottom: 1px solid #fff;
+  outline: none;
+  background: transparent;
 }
