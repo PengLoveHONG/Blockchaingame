@@ -18,7 +18,7 @@ application = Flask(__name__)
 
 @application.route('/', methods=["POST", "GET"])
 def index():
-    return render_template('index.html')
+    return render_templategit('index.html')
 
 @application.route('/play', methods=["POST", "GET"])
 def play():

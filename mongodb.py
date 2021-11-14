@@ -295,5 +295,3 @@ def accept_block(game_name, username, id):
 #print(get_block_message_hash("test", "thomas")[3])
 #print(new_block_requests("test", "thomas1"))
 
-print(accept_block("test","thomas2", "6191745677f4bf634a425efc"))
-
