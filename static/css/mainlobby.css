@@ -187,5 +187,40 @@ body {
   top: 110px;
   border-radius: 10px;
   background-color: rgba(223, 223, 223, 0.212);
-  margin: 0 auto;
+  margin: 0 5% 0 5%;
+  display: inline-flex;
+  justify-content: center;
+}
+
+.instructionbox .box1 {
+  width: 25%;
+  height: 100%;
+  background-color: rgb(42, 180, 53, 0.2);
+}
+.instructionbox .box2 {
+  width: 25%;
+  height: 100%;
+  background-color: rgb(83, 42, 180, 0.2);
+}
+.instructionbox .box3 {
+  width: 25%;
+  height: 100%;
+  background-color: rgb(180, 93, 42, 0.2);
+}
+.instructionbox .box4 {
+  width: 25%;
+  height: 100%;
+  background-color: rgba(42, 180, 65, 0.2);
+}
+
+.box1 h2,
+.box2 h2,
+.box3 h2,
+.box4 h2 {
+  font-size: 20px;
+  font-weight: 300;
+  text-align: center;
+  letter-spacing: 0px;
+  margin: 15px 0 0 0;
+  color: rgb(255, 255, 255);
 }

@@ -5,7 +5,12 @@ from pymongo import MongoClient
 import certifi
 
 from mongdb_connectionstring import connection_string
-from mongodb import game_creation, game_join, query_blockchain, user_query, balance_query, add_name, game_info_query, init_blockchain
+from mongodb import (game_creation, game_join, query_blockchain, 
+                    user_query, balance_query, add_name, 
+                    game_info_query, init_blockchain, update_balance, 
+                    get_block_message_hash, pick_next, current_block, 
+                    add_block, new_block_requests, remove_block,
+                    accept_block)
 
 #REMEMBER TO MAKE A REQUIREMENTS.TXT FILE
 
@@ -45,7 +50,6 @@ def play():
                 error = "Game name already exists"
                 return render_template('play.html', error=error)
             else:
-                init_blockchain(game_name_create, difficulty, connection)
                 game_creation(username, game_name_create, difficulty, connection)
                 return redirect(url_for('lobby', game_name=game_name_create, username=username, difficulty=difficulty, connection=connection))
         
@@ -79,13 +83,21 @@ def lobby(game_name, username, difficulty, connection):
 
 @application.route('/game/<game_name>/<username>', methods=["POST", "GET"])
 def game(game_name, username):
+    #function to add user to game cluster
+    #each player has their own blockchain ledger
+    
     balance = balance_query(username, game_name)
-    query = query_blockchain(game_name)
-    blockchain_message = query["blockchain_message"]
-    blockchain_hash = query["blockchain_hash"]
-    previous_hash = query["previous_hash"]
-    difficulty = query["difficulty"]
-    connection = query["connection"]
+    players=user_query(game_name)
+    query=game_info_query(game_name) #[0] is difficulty, [1] is connection
+    difficulty=query[0]
+    connection=query[1]
+    init_blockchain(game_name, difficulty, connection, players)
+    block = get_block_message_hash(game_name, username)
+    blockchain_message = block[0]
+    blockchain_hash = block[1]
+    blockchain_height = block[2]
+    
+
 
     if difficulty == "two":
         difficulty_num = "00"
@@ -96,7 +108,6 @@ def game(game_name, username):
     elif difficulty == "four":
         difficulty_num = "0000"
 
-   
 
     #create the genesis block, add it to the database, everyone in the game is ajax querying the blockchain database and beginning the sha hash
 
@@ -108,8 +119,10 @@ def game(game_name, username):
                             connection=connection,
                             blockchain_message=blockchain_message,
                             blockchain_hash=blockchain_hash,
-                            difficulty_num=difficulty_num
-                             )
+                            difficulty_num=difficulty_num,
+                            blockchain_height=blockchain_height
+                            )
+                            
 
 
 
@@ -123,6 +136,58 @@ def players_api(game_name):
 def num_players_api(game_name):
     list_of_players = (user_query(game_name))
     return jsonify("", render_template("playercount_component.html", list_of_players=list_of_players))
+
+@application.route("/api_updatebalance/<game_name>/<username>", methods=["POST"]) #api to update the balance for ajax
+def update_balance_api(game_name, username):
+    update_balance(game_name, username, 5)
+    balance = balance_query(username, game_name)
+    return jsonify("", render_template("balance_component.html", balance=balance))
+
+@application.route("/api_blockchain/<game_name>/<username>", methods=["POST"]) #api to get the blockchain for ajax
+def block_api(game_name, username):
+    block = current_block(game_name, username)
+    return jsonify("", render_template("blockchain_component.html", block=block))
+
+@application.route("/api_addblockchain/<game_name>/<username>/<hashvalue>/<nonce>", methods=["POST"]) #api to add to the blockchain for ajax
+def add_block_api(game_name, username, hashvalue, nonce):
+
+    next_player = pick_next(game_name, username)
+    message_hash = add_block(game_name, username, next_player, hashvalue, nonce)#calculates the new hash based on ledger and adds to next player
+
+    new_ledger = message_hash[0]
+    blockchain_hash = message_hash[1]
+    block_height = message_hash[2]
+
+    return(jsonify("", render_template("block_component.html", blockchain_message=new_ledger, blockchain_hash=blockchain_hash, block_height=block_height)))
+
+@application.route("/api_recieveBlockchain/<game_name>/<username>", methods=["POST", "GET"]) #api to recieve the blockchain for ajax
+def recieve_block_api(game_name, username):
+    blocks = new_block_requests(game_name, username)
+    heights = blocks[0]
+    hashes = blocks[1]
+    ids = blocks[2]
+    return(jsonify("", render_template("requests_component.html", game_name=game_name, username=username, heights=heights, hashes=hashes, ids=ids)))
+
+@application.route("/api_accept_reject/<game_name>/<username>/<choice>/<id>", methods=["POST","GET"]) #api to accept or reject a request for ajax
+def accept_reject_api(game_name, username, choice, id):
+
+    #transactions need to include block rewards for the miner
+    if choice == "accept": #accepting replaces the timestamp, block height, prevhash, transactions, lastnonce, and ledger for first document
+        accept_block(game_name, username, id)
+        remove_block(game_name, username, id)
+    if choice == "reject":
+        remove_block(game_name, username, id)
+    
+    blocks = new_block_requests(game_name, username)
+    heights = blocks[0]
+    hashes = blocks[1]
+    ids = blocks[2]
+    return(jsonify("", render_template("requests_component.html", game_name=game_name, username=username, heights=heights, hashes=hashes, ids=ids)))
+
+    
+        
+
+
 
 
 if __name__ == "__main__":

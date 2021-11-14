@@ -1,5 +1,6 @@
 
 // create a function where you grab id="noncevalue" and append a p tag with the random value from 0 to 1000000
+//might have to put all the data into the form to be sent into flask
 
 
 function randomNonce() {
@@ -9,35 +10,105 @@ function randomNonce() {
         document.getElementById("nonce").remove();
 		document.getElementById("hash").remove();
     }
+
 	var blockhash = String((document.getElementById("blockhash").innerHTML).replace(/\s/g, ''));
 
     var nonce = document.getElementById("noncevalue");
     var noncevalue = String(Math.floor(Math.random()*1000000));
 
-    var nonce_tag = document.createElement("p");
+    nonce_tag = document.createElement("output");
     nonce_tag.id = "nonce";
+	nonce_tag.name = "nonce"
+
     nonce_tag.innerHTML = blockhash + "<br>" + noncevalue;
     nonce.appendChild(nonce_tag);
 
 	//console.log(blockhash + "\n" + noncevalue);
-    let hash_value = sha256((blockhash + "\n" + noncevalue));
-	var hash = document.getElementById("hashvalue");
-	var hash_tag = document.createElement("p");
+    hash_value = sha256((blockhash + "\n" + noncevalue));
+	hash = document.getElementById("hashvalue");
+	hash_tag = document.createElement("output");
 	hash_tag.id = "hash";
+	hash_tag.name = "hash"
 	hash_tag.innerHTML = hash_value;
 	hash.appendChild(hash_tag);
 
 	
-	difficulty = document.getElementById("difficulty").innerHTML;
-	console.log(difficulty);
+	difficulty = document.getElementById("difficulty").innerHTML.replace(/\s/g, '');
+	gamename = String(document.getElementById("gamename").innerHTML.replace(/\s/g, ''));
+	username = String(document.getElementById("username").innerHTML.replace(/\s/g, ''));
+
 	if (hash_value.slice(0, difficulty.length) === String(difficulty)) {
 		alert("You found a block!");
+		updateBalance(gamename, username);
 	}
 
 };
 
+"=================================================="
+// On finding the correct nonce, function to ajax to alter bitcoing balance
+function updateBalance(game_name, username) {
+	$.ajax({
+		url: `/api_updatebalance/${game_name}/${username}`,
+		type: "POST",
+		datatype: "json",
+		success: function(data) {
+			$(buyingpowerbox).replaceWith(data);
+		}
+	});
 
-//might have to put all the data into the form to be sent into flask
+}
+
+
+"=================================================="
+function sendToNet(gamename, username){ //fix
+	//timestamp, block_height, previous hash, transactions, last_nonce, block_hash, ledger
+	
+	prev_hash = String(document.getElementById("blockhash").innerHTML.replace(/\s/g, ''));
+	hash = String(document.getElementById("hash").innerHTML.replace(/\s/g, ''));
+	nonce = String(document.getElementById("nonce").innerHTML.replace(/\s/g, ''));
+	//remove the prev_hash string value within nonce
+	nonce = nonce.replace(prev_hash, "");
+	nonce = nonce.replace(/<br>/g, '');
+
+	
+	//console.log(hash);
+	//console.log(nonce);
+
+	$.ajax({
+		url: `/api_addblockchain/${gamename}/${username}/${hash}/${nonce}`,
+		type: "POST",
+		datatype: "json",
+		success: function(data) {
+			$(block).replaceWith(data);
+		}
+	});
+
+}
+
+"=================================================="
+
+$(function() {
+	window.setInterval(function(){
+		recieveBlockchain();
+	}, 1000)
+
+	function recieveBlockchain() { //make this more efficient later by just using {{username in inline html call}}
+		gamename = (document.getElementById("gamename").innerHTML.replace(/\s/g, ''));
+		username = (document.getElementById("username").innerHTML.replace(/\s/g, ''));
+		//console.log(gamename);
+		//console.log(username);
+		$.ajax({
+			url: `/api_recieveBlockchain/${gamename}/${username}`,
+			type: "GET",
+			datatype: "json",
+			success: function(data) {
+				$(requests).replaceWith(data);
+			}
+		});
+	}
+});
+
+"=================================================="
 
 function sha256(ascii) {
 	function rightRotate(value, amount) {
@@ -135,3 +206,24 @@ function sha256(ascii) {
 	}
 	return result;
 };
+
+"=================================================="
+
+function accept_reject(game_name, username, choice, id) {
+	console.log(game_name);
+	console.log(username);
+	console.log(choice);
+	console.log(id);
+	//ajax should in take the game_name, username, and choice and output a render template component
+	$.ajax({
+		url: `/api_accept_reject/${game_name}/${username}/${choice}/${id}`,
+		type: "POST",
+		datatype: "json",
+		success: function(data) {
+			$(requests).replaceWith(data);
+		}
+	});
+
+
+
+}

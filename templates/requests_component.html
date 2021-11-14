@@ -1,0 +1,17 @@
+<div class="requests" id="requests">
+    {% for i in range(heights|length) %}
+    <div class="requestbox" id="{{ids[i]}}"> <!--hide the username within this html-->
+        <h1> Request </h1>
+        <hr style="width:70%;", size="1", color=grey>
+        <h2>Block hash: {{hashes[i]}}</h2>
+        <h2>Block height: {{heights[i]}}</h2>
+        
+        <div class="buttonbox">
+            <input class="accept" type="button" value="Accept" name="accept" onclick="accept_reject('{{game_name}}', '{{username}}' , 'accept', '{{ids[i]}}')">
+            <input class="reject" type="button" value="Reject" name="reject" onclick="accept_reject('{{game_name}}', '{{username}}' , 'reject', '{{ids[i]}}')">
+        </div>
+    </div>
+    {% endfor %}
+    
+    
+</div>
