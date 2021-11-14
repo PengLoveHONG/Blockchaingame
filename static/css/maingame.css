@@ -74,20 +74,20 @@ body {
   top: 0;
   left: 0;
   margin: 5% auto;
-  border-radius: 15px;
+  border-radius: 12px;
   background-color: rgb(224, 224, 224);
-  box-shadow: 20px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 15px 15px rgba(0, 0, 0, 0.1);
 }
 .block h2 {
   font-size: 20px;
   word-wrap: break-word;
   top: 0px;
-  margin: 3% 5% 0% 5%;
+  margin: 1% 2% 0% 2%;
   position: relative;
 }
 .block p {
   font-size: 15px;
-  padding-top: 30px;
+  padding-top: 10px;
   margin: 0% 5% 0 5%;
   color: rgb(134, 134, 134);
 }

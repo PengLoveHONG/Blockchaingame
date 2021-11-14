@@ -113,7 +113,7 @@ def init_blockchain(game_name, difficulty, connection, players): #user_query sen
                             "transactions": [],
                             "last_nonce": "0 0 0 0",
                             "block_hash": "f7a6c106dd2f1b3f0931bc9333e6d8772a1b7399f07ccd8b030952c1341aab16",
-                            "ledger":"0\nf7a6c106dd2f1b3f0931bc9333e6d8772a1b7399f07ccd8b030952c1341aab16"
+                            "ledger":"0 0 0 0\nf7a6c106dd2f1b3f0931bc9333e6d8772a1b7399f07ccd8b030952c1341aab16\n"
                         })
     return True
 
@@ -188,7 +188,7 @@ def add_block(game_name, from_username, to_username, previous_hash, last_nonce):
         }
     )
 
-    return (new_ledger, block_hash, block_height)
+    return (previous_hash, block_hash, block_height)
 
 
 "============================================================================"

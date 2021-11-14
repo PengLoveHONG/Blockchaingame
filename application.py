@@ -154,11 +154,11 @@ def add_block_api(game_name, username, hashvalue, nonce):
     next_player = pick_next(game_name, username)
     message_hash = add_block(game_name, username, next_player, hashvalue, nonce)#calculates the new hash based on ledger and adds to next player
 
-    new_ledger = message_hash[0]
+    blockchain_message = message_hash[0] #what is message_hash?
     blockchain_hash = message_hash[1]
     block_height = message_hash[2]
 
-    return(jsonify("", render_template("block_component.html", blockchain_message=new_ledger, blockchain_hash=blockchain_hash, block_height=block_height)))
+    return(jsonify("", render_template("block_component.html", blockchain_message=blockchain_message, blockchain_hash=blockchain_hash, block_height=block_height)))
 
 @application.route("/api_recieveBlockchain/<game_name>/<username>", methods=["POST", "GET"]) #api to recieve the blockchain for ajax
 def recieve_block_api(game_name, username):
