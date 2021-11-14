@@ -220,7 +220,7 @@ def current_block(game_name, username):
     #print the first document in the collection
     
     block = collection.find_one({"username": username})
-    blockchain_message = block["ledger"]
+    blockchain_message = block["previous_hash"]
     block_hash = block["block_hash"]
     block_height = block["block_height"]
 
