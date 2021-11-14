@@ -146,7 +146,7 @@ def update_balance_api(game_name, username):
 @application.route("/api_blockchain/<game_name>/<username>", methods=["POST"]) #api to get the blockchain for ajax
 def block_api(game_name, username):
     block = current_block(game_name, username)
-    return jsonify("", render_template("blockchain_component.html", block=block))
+    return jsonify("", render_template("block_component.html", block=block))
 
 @application.route("/api_addblockchain/<game_name>/<username>/<hashvalue>/<nonce>", methods=["POST"]) #api to add to the blockchain for ajax
 def add_block_api(game_name, username, hashvalue, nonce):
@@ -175,15 +175,15 @@ def accept_reject_api(game_name, username, choice, id):
     if choice == "accept": #accepting replaces the timestamp, block height, prevhash, transactions, lastnonce, and ledger for first document
         accept_block(game_name, username, id)
         remove_block(game_name, username, id)
+        
     if choice == "reject":
         remove_block(game_name, username, id)
     
-    blocks = new_block_requests(game_name, username)
-    heights = blocks[0]
-    hashes = blocks[1]
-    ids = blocks[2]
-    return(jsonify("", render_template("requests_component.html", game_name=game_name, username=username, heights=heights, hashes=hashes, ids=ids)))
-
+    block = current_block(game_name, username)
+    blockchain_message = block[0]
+    blockchain_hash = block[1]
+    block_height = block[2]
+    return(jsonify("", render_template("block_component.html", blockchain_message=blockchain_message, blockchain_hash=blockchain_hash, block_height=block_height)))
     
         
 

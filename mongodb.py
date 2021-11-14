@@ -219,9 +219,12 @@ def current_block(game_name, username):
 
     #print the first document in the collection
     
-    block = collection.find_one({})
+    block = collection.find_one({"username": username})
+    blockchain_message = block["ledger"]
+    block_hash = block["block_hash"]
+    block_height = block["block_height"]
 
-    return block
+    return (blockchain_message, block_hash, block_height)
 
 def new_block_requests(game_name, username):
     cluster = MongoClient(connection_string, tlsCAFile=certifi.where())
@@ -295,3 +298,4 @@ def accept_block(game_name, username, id):
 #print(get_block_message_hash("test", "thomas")[3])
 #print(new_block_requests("test", "thomas1"))
 
+#print(current_block("test1", "thomas"))

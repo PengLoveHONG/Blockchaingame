@@ -220,7 +220,7 @@ function accept_reject(game_name, username, choice, id) {
 		type: "POST",
 		datatype: "json",
 		success: function(data) {
-			$(requests).replaceWith(data);
+			$(block).replaceWith(data);
 		}
 	});
 
