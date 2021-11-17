@@ -2,16 +2,40 @@
 // create a function where you grab id="noncevalue" and append a p tag with the random value from 0 to 1000000
 //might have to put all the data into the form to be sent into flask
 
+//flip card
+$(document).ready(function() {
 
-function randomNonce() {
+	var s_round = '.s_round';
+  
+	$(s_round).hover(function() {
+	  $('.b_round').toggleClass('b_round_hover');
+	  return false;
+	});
+  
+	$(s_round).click(function() {
+	  $('.flip_box').toggleClass('flipped');
+	  $(this).addClass('s_round_click');
+	  $('.s_arrow').toggleClass('s_arrow_rotate');
+	  $('.b_round').toggleClass('b_round_back_hover');
+	  return false;
+	});
+  
+	$(s_round).on('transitionend', function() {
+	  $(this).removeClass('s_round_click');
+	  $(this).addClass('s_round_back');
+	  return false;
+	});
+  });
+  
+"=================================================="
+
+function randomNonce(gamename, username, difficulty, blockhash) {
     //check if the nonce is already in the page
 	if (document.getElementById("nonce")) {
         //if it is, remove it
         document.getElementById("nonce").remove();
 		document.getElementById("hash").remove();
     }
-
-	var blockhash = String((document.getElementById("blockhash").innerHTML).replace(/\s/g, ''));
 
     var nonce = document.getElementById("noncevalue");
     var noncevalue = String(Math.floor(Math.random()*1000000));
@@ -23,7 +47,7 @@ function randomNonce() {
     nonce_tag.innerHTML = blockhash + "<br>" + noncevalue;
     nonce.appendChild(nonce_tag);
 
-	//console.log(blockhash + "\n" + noncevalue);
+	console.log(blockhash + "\n" + noncevalue);
     hash_value = sha256((blockhash + "\n" + noncevalue));
 	hash = document.getElementById("hashvalue");
 	hash_tag = document.createElement("output");
@@ -32,10 +56,6 @@ function randomNonce() {
 	hash_tag.innerHTML = hash_value;
 	hash.appendChild(hash_tag);
 
-	
-	difficulty = document.getElementById("difficulty").innerHTML.replace(/\s/g, '');
-	gamename = String(document.getElementById("gamename").innerHTML.replace(/\s/g, ''));
-	username = String(document.getElementById("username").innerHTML.replace(/\s/g, ''));
 
 	if (hash_value.slice(0, difficulty.length) === String(difficulty)) {
 		alert("You found a block!");
@@ -79,26 +99,29 @@ function sendToNet(gamename, username){ //fix
 		type: "POST",
 		datatype: "json",
 		success: function(data) {
-			$(block).replaceWith(data);
+			$(flip_box).replaceWith(data);
 		}
 	});
+
+	//make an ajax call to update the nonce hash value so it 
+	// is dynamic with the new hashes
+	
+
+
 
 }
 
 "=================================================="
-
-$(function() {
+function queryForIncoming(game_name, username) {
 	window.setInterval(function(){
-		recieveBlockchain();
+		recieveBlockchain(game_name, username);
 	}, 1000)
 
-	function recieveBlockchain() { //make this more efficient later by just using {{username in inline html call}}
-		gamename = (document.getElementById("gamename").innerHTML.replace(/\s/g, ''));
-		username = (document.getElementById("username").innerHTML.replace(/\s/g, ''));
+	function recieveBlockchain(game_name, username) { //make this more efficient later by just using {{username in inline html call}}
 		//console.log(gamename);
 		//console.log(username);
 		$.ajax({
-			url: `/api_recieveBlockchain/${gamename}/${username}`,
+			url: `/api_recieveBlockchain/${game_name}/${username}`,
 			type: "GET",
 			datatype: "json",
 			success: function(data) {
@@ -106,7 +129,9 @@ $(function() {
 			}
 		});
 	}
-});
+}
+
+
 
 "=================================================="
 
@@ -210,17 +235,15 @@ function sha256(ascii) {
 "=================================================="
 
 function accept_reject(game_name, username, choice, id) {
-	console.log(game_name);
-	console.log(username);
-	console.log(choice);
-	console.log(id);
+	//console.log(game_name);
+	
 	//ajax should in take the game_name, username, and choice and output a render template component
 	$.ajax({
 		url: `/api_accept_reject/${game_name}/${username}/${choice}/${id}`,
 		type: "POST",
 		datatype: "json",
 		success: function(data) {
-			$(block).replaceWith(data);
+			$(flip_box).replaceWith(data);
 		}
 	});
 

@@ -72,8 +72,6 @@ def play():
         return render_template('play.html', error=error)
     
 
-    
-
 
 @application.route('/lobby/<game_name>/<username>/<difficulty>/<connection>', methods=["POST", "GET"]) #CREATE A FUNCTION THAT ALTERS THE USERNAME URL SO PEOPLE CANNOT ENTER OTHERS GAME BY NAME
 def lobby(game_name, username, difficulty, connection):
@@ -96,6 +94,7 @@ def game(game_name, username):
     blockchain_message = block[0]
     blockchain_hash = block[1]
     blockchain_height = block[2]
+    ledger = block[3]
     
 
 
@@ -120,13 +119,15 @@ def game(game_name, username):
                             blockchain_message=blockchain_message,
                             blockchain_hash=blockchain_hash,
                             difficulty_num=difficulty_num,
-                            blockchain_height=blockchain_height
+                            blockchain_height=blockchain_height,
+                            ledger = ledger
                             )
                             
 
 
 
 "========================================|   API   |=========================================="
+
 @application.route("/api_players/<game_name>", methods=["POST"]) #api to get the players in a game for ajax
 def players_api(game_name):
     list_of_players = user_query(game_name)
@@ -156,9 +157,10 @@ def add_block_api(game_name, username, hashvalue, nonce):
 
     blockchain_message = message_hash[0] #what is message_hash?
     blockchain_hash = message_hash[1]
-    block_height = message_hash[2]
+    blockchain_height = message_hash[2]
+    ledger = message_hash[3]
 
-    return(jsonify("", render_template("block_component.html", blockchain_message=blockchain_message, blockchain_hash=blockchain_hash, block_height=block_height)))
+    return(jsonify("", render_template("block_component.html", blockchain_message=blockchain_message, blockchain_hash=blockchain_hash, blockchain_height=blockchain_height, ledger=ledger)))
 
 @application.route("/api_recieveBlockchain/<game_name>/<username>", methods=["POST", "GET"]) #api to recieve the blockchain for ajax
 def recieve_block_api(game_name, username):
@@ -182,8 +184,9 @@ def accept_reject_api(game_name, username, choice, id):
     block = current_block(game_name, username)
     blockchain_message = block[0]
     blockchain_hash = block[1]
-    block_height = block[2]
-    return(jsonify("", render_template("block_component.html", blockchain_message=blockchain_message, blockchain_hash=blockchain_hash, block_height=block_height)))
+    blockchain_height = block[2]
+    ledger = block[3]
+    return(jsonify("", render_template("block_component.html", blockchain_message=blockchain_message, blockchain_hash=blockchain_hash, blockchain_height=blockchain_height, ledger=ledger)))
     
         
 

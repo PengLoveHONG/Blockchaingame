@@ -24,6 +24,10 @@
             <hr style="width:100%;", size="3", color=white>  
         </div>
 
+        <script>
+            queryForIncoming('{{game_name}}','{{username}}')
+        </script>
+
         <div class="maintop">
             <div class="column1">
                 <div class="instbox">
@@ -36,21 +40,45 @@
                     <p id="gamename"> {{game_name}} </p>
                     <p id="username"> {{username}} </p>
                 </div>
+                
             </div>
 
             <div class="column2">
-                <div class="block" id="block">
-                    <p> Blockchain Message</p>
-                    <h2> {{blockchain_message}} </h2>
-                    <p> Blockchain Hash</p>
-                    <h2 id="blockhash"> {{blockchain_hash}} </h2>
-                    <h2 id="blockheight" style="color:darkblue"> Blockchain Height: {{blockchain_height}} </h2>
+
+                <div class="flip_box_container">
+                    <div class='flip_box' id='flip_box'>
+
+                        <div class="front" id="block">
+                            <p> Blockchain Message</p>
+                            <h2> {{blockchain_message}} </h2>
+                            <p> Blockchain Hash</p>
+                            <h2 id="blockhash"> {{blockchain_hash}} </h2>
+                            <h2 id="blockheight" style="color:darkblue"> Blockchain Height: {{blockchain_height}} </h2>
+                        </div>
+                    
+                        <div class='back'>
+                        <h1 class='b_headline'>Ledger</h1>
+                        <p class='b_text'>
+                            <div class="scrollabletextbox">
+                                {{ledger}}
+                            </div>
+                        </p>
+                        </div>
+                    
+                    </div>
+                    
+                    <div class='r_wrap'>
+                    
+                        <div class='b_round'></div>
+                        <div class='s_round'>
+                        <div class='s_arrow'></div>
+                        </div>
+                    </div>
                 </div>
+
                 <div class="miningbox">
                     <!--create a form that has two vertical buttons, one named random hash, and another named verify-->
-                
-
-                    <form action="/mining" method="post" id="miningform" class="miningform">
+                    <form method="post" id="miningform" class="miningform">
                         <div class="noncewrapper">
                             <div class="noncevalue" id="noncevalue">
                                 <p>Nonce</p>
@@ -66,7 +94,7 @@
                         </div>
 
                         <div class="buttons">
-                            <input type="button" value="Random Nonce" name="random_hash" onclick="randomNonce();">
+                            <input type="button" value="Random Nonce" name="random_hash" onclick="randomNonce('{{game_name}}','{{username}}', '{{difficulty_num}}', '{{blockchain_hash}}');">
                             <input type="button" value="Send to Network" name="verify" onclick="sendToNet('{{game_name}}','{{username}}');">
                         </div>
                         

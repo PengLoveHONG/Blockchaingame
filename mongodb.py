@@ -5,8 +5,43 @@ import certifi
 import random
 import time
 import hashlib
+import numpy as np
 
 from mongdb_connectionstring import connection_string
+"============================================================================"
+def random_matrix_connection(n_users,connection_quality, users_list): #randomly generate a matrix of connections between users using numpy
+
+    user_dict ={}
+    matrix = np.random.rand(n_users,n_users)
+    count = 0
+    for i in range(n_users):
+        for j in range(n_users):
+            if i == j:
+                matrix[i][j] = 1
+                count += 1
+            else:
+                if matrix[i][j] > (1 - connection_quality) * (1 + 1 / float(n_users)):
+                    matrix[i][j] = 1
+                    count += 1
+                else:
+                    matrix[i][j] = 0
+    for k in range(0,len(matrix.tolist())):
+        for h in range(len(matrix[k])):
+            if matrix[k][h] == 1.0:
+                if users_list[k] in user_dict:
+                    user_dict[users_list[k]].append(users_list[h])
+                else:
+                    user_dict[users_list[k]] = [users_list[h]]
+    print(matrix.astype(int))
+    return user_dict
+
+#print(random_matrix_connection(10,0.5,['a','b','c','d','e','f','g','h','i','j']))
+
+
+
+
+
+
 
 "============================================================================"
 
@@ -113,7 +148,7 @@ def init_blockchain(game_name, difficulty, connection, players): #user_query sen
                             "transactions": [],
                             "last_nonce": "0 0 0 0",
                             "block_hash": "f7a6c106dd2f1b3f0931bc9333e6d8772a1b7399f07ccd8b030952c1341aab16",
-                            "ledger":"0 0 0 0\nf7a6c106dd2f1b3f0931bc9333e6d8772a1b7399f07ccd8b030952c1341aab16\n"
+                            "ledger":"0 0 0 0\nf7a6c106dd2f1b3f0931bc9333e6d8772a1b7399f07ccd8b030952c1341aab16"
                         })
     return True
 
@@ -150,13 +185,12 @@ def add_block(game_name, from_username, to_username, previous_hash, last_nonce):
     block_height = block_height["block_height"] + 1
     ledger = collection.find_one({"username": from_username}, {"ledger": 1, "_id": 0})
     ledger = ledger["ledger"]
-    new_ledger = ledger + "\n" + last_nonce + "\n" + previous_hash 
-    print(new_ledger)
-    block_hash = hashlib.sha256(new_ledger.encode()).hexdigest()
-    
-    
-    #get the block height of the first document
+    ledger = ledger + "\n" + last_nonce  + "\n" + previous_hash + "\n" + "[" + from_username + " + found nonce" + "]"
+    #print(new_ledger)
+    block_hash = hashlib.sha256(ledger.encode()).hexdigest()
+    new_ledger = ledger + "\n" + block_hash
 
+    #get the block height of the first document
     #update first collection values
     collection.update_one(
         {"username": from_username},
@@ -170,12 +204,8 @@ def add_block(game_name, from_username, to_username, previous_hash, last_nonce):
             "ledger": new_ledger
         }}
     )
-
             
     collection = db[to_username]
-
-    #update first collection values
-    #add new document
     collection.insert_one(
         {"username": from_username,
         "timestamp": timestamp,
@@ -188,7 +218,7 @@ def add_block(game_name, from_username, to_username, previous_hash, last_nonce):
         }
     )
 
-    return (previous_hash, block_hash, block_height)
+    return (previous_hash, block_hash, block_height, new_ledger)
 
 
 "============================================================================"
@@ -223,8 +253,9 @@ def current_block(game_name, username):
     blockchain_message = block["previous_hash"]
     block_hash = block["block_hash"]
     block_height = block["block_height"]
+    ledger = block["ledger"]
 
-    return (blockchain_message, block_hash, block_height)
+    return (blockchain_message, block_hash, block_height, ledger)
 
 def new_block_requests(game_name, username):
     cluster = MongoClient(connection_string, tlsCAFile=certifi.where())
@@ -238,12 +269,12 @@ def new_block_requests(game_name, username):
     block_hashes = []
     block_ids = []
     for request in requests:
-        print(request)
+        #print(request)
         #grab the value of the block height in the dictionary
         id = request["_id"]
         block_ids.append(id)
         block_height = request["block_height"]
-        print(type(block_height))
+        #print(type(block_height))
         heights.append(block_height)
         block_hashes.append(request["block_hash"])
     
