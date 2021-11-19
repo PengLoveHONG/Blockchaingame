@@ -21,7 +21,7 @@
             <div class="title">
                 <a onclick="window.location.href='/'">Blockchain Game</a>
                 <div class="buyingpowerbox">
-                    <h2>{{game_name}} | (PublicKey)</h2>
+                    <h2>{{game_name}} | {{username}}</h2>
                 </div>
             </div>
             <hr style="width:100%;", size="3", color=white>  
@@ -53,21 +53,43 @@
             <div class="box1">
                 <h2>Difficulty</h2>
                 <hr style="width:80%;", size="1", color=white>
+                <div class="content_wrapper">
+                    <img src="/static/img/target.png" class="difficultyimg">
+                </div>
+                <h2> Miners are using the SHA256 hash function to search for a hash with "{{difficulty}}"
+                    preceding the hash.
+                </h2>
                 
 
             </div>
             <div class="box2">
                 <h2>Number of connections</h2>
                 <hr style="width:80%;", size="1", color=white>
+                <div class="content_wrapper">
+                    <img src="/static/img/connection.png" class="connectionimg">
+                </div>
+                <h2>To mimic a Bitcoin network, miners are connected to {{connection}} other miners.</h2>
             </div>
             <div class="box3">
-                <h2>Some other info</h2>
+
+                <h2>Are you on the longest blockchain?</h2>
                 <hr style="width:80%;", size="1", color=white>
+                <div class="content_wrapper">
+                    <img src="/static/img/blockchain.png" class="blockchainimg">
+                </div>
+                <h2>Transactions and rewards are only gaurenteed for the longest blockchain, 
+                    meaning fragmented chains will not be rewarded. 
+                </h2>
 
             </div>
             <div class="box4">
-                <h2> Are you on the longest blockchain?</h2>
+                <h2>Verify requests</h2>
                 <hr style="width:80%;", size="1", color=white>
+                <div class="content_wrapper">
+                    <img src="/static/img/agenda.png" class="agendaimg">
+                </div>
+                <h2>Miners can send falsified ledgers for verification and adoption by other miners. 
+                    Verify incoming requests and avoid mining incorrect blocks. </h2>
             </div>
         </div>
 
