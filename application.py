@@ -46,12 +46,13 @@ def play():
         if game_name_create != "NA":
             difficulty = request.form['difficulty']
             connection = request.form['connection']
+            connection_slider = request.form['slider']
             if (game_creation(username, game_name_create, difficulty, connection) == False):
                 error = "Game name already exists"
                 return render_template('play.html', error=error)
             else:
                 game_creation(username, game_name_create, difficulty, connection)
-                return redirect(url_for('lobby', game_name=game_name_create, username=username, difficulty=difficulty, connection=connection))
+                return redirect(url_for('lobby', game_name=game_name_create, username=username, difficulty=difficulty, connection=connection, connection_slider=connection_slider))
         
         if game_name_join != "NA":
             if game_join(username, game_name_join) == False: #adds name to db
@@ -62,6 +63,7 @@ def play():
                 else:
                     difficulty = game_info_query(game_name_join)[0]
                     connection = game_info_query(game_name_join)[1]
+                    #query the connection_slider value
 
                     add_name(username, game_name_join, difficulty, connection)
                     return redirect(url_for('lobby', game_name=game_name_join, username=username, difficulty=difficulty, connection=connection))
@@ -73,10 +75,10 @@ def play():
     
 
 
-@application.route('/lobby/<game_name>/<username>/<difficulty>/<connection>', methods=["POST", "GET"]) #CREATE A FUNCTION THAT ALTERS THE USERNAME URL SO PEOPLE CANNOT ENTER OTHERS GAME BY NAME
-def lobby(game_name, username, difficulty, connection):
+@application.route('/lobby/<game_name>/<username>/<difficulty>/<connection>/<connection_slider>', methods=["POST", "GET"]) #CREATE A FUNCTION THAT ALTERS THE USERNAME URL SO PEOPLE CANNOT ENTER OTHERS GAME BY NAME
+def lobby(game_name, username, difficulty, connection, connection_slider):
     list_of_players = user_query(game_name)
-    return render_template('lobby.html', username=username, game_name=game_name, list_of_players=list_of_players, difficulty=difficulty, connection=connection)
+    return render_template('lobby.html', username=username, game_name=game_name, list_of_players=list_of_players, difficulty=difficulty, connection=connection, connection_slider=connection_slider)
     
 
 @application.route('/game/<game_name>/<username>', methods=["POST", "GET"])
@@ -84,6 +86,11 @@ def game(game_name, username):
     #function to add user to game cluster
     #each player has their own blockchain ledger
     
+    #this is where the matrix player algo is created
+    #WHEN THE START BUTTON IS CALLED, EVERYONE SHOULD START AT SAME TIME, or it should be a vote sys
+    #Do a ready feature, so the names on the lobby change color
+
+
     balance = balance_query(username, game_name)
     players=user_query(game_name)
     query=game_info_query(game_name) #[0] is difficulty, [1] is connection

@@ -21,7 +21,7 @@
             <div class="title">
                 <a onclick="window.location.href='/'">Blockchain Game</a>
                 <div class="buyingpowerbox">
-                    <h2>{{game_name}} | {{username}}</h2>
+                    <h2>{{game_name}} | {{username}} | {{connection_slider}}</h2>
                 </div>
             </div>
             <hr style="width:100%;", size="3", color=white>  
@@ -40,7 +40,7 @@
                     <p>Game ID</p>
                 </div> 
                 
-                <button class="next_button" onclick="window.location.href='/game/{{game_name}}/{{username}}'">
+                <button class="next_button" onclick="window.location.href='/game/{{game_name}}/{{username}}/{{connection_slider}}'">
                     Start
                 </button>
 

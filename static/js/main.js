@@ -94,6 +94,39 @@ function createButton() {
     select_conn.appendChild(option4_conn);
 
     
+    //add a h2 
+    h2 = document.createElement("h2");
+    h2.setAttribute("class", "h2_connection");
+    h2.innerHTML = "Select the connection quality";
+    document.getElementById("user-box").appendChild(h2);
+
+    select_slider = document.createElement("input");
+    select_slider.setAttribute("id", "slider");
+    select_slider.name = "slider";
+    select_slider.type = "range";
+    select_slider.value = "1.0";
+    select_slider.min = "0";
+    select_slider.max = "1.0";
+    select_slider.step = "0.01";
+    select_slider.setAttribute("required", "");
+    select_slider.setAttribute("size", "2");
+    // add oninput="this.nextElementSibling.value = this.value" to select_slider
+    // to update the value of the next element
+    select_slider.oninput = function() {
+        this.nextElementSibling.value = this.value;
+        console.log(this.value);
+    };
+    
+    document.getElementById("user-box").appendChild(select_slider);
+    
+    //add an output box for the slider value
+    output = document.createElement("output");
+    output.setAttribute("id", "slider_output");
+    output.name = "slider_output";
+    output.value = "1";
+    document.getElementById("user-box").appendChild(output);
+
+
 
 
 

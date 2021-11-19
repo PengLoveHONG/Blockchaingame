@@ -188,7 +188,7 @@ def add_block(game_name, from_username, to_username, previous_hash, last_nonce):
     ledger = ledger + "\n" + last_nonce  + "\n" + previous_hash + "\n" + "[" + from_username + " + found nonce" + "]"
     #print(new_ledger)
     block_hash = hashlib.sha256(ledger.encode()).hexdigest()
-    new_ledger = ledger + "\n" + block_hash
+    new_ledger = ledger + "\n" + block_hash + "\n -----------------------------------------------------"
 
     #get the block height of the first document
     #update first collection values

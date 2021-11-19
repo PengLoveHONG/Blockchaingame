@@ -82,7 +82,7 @@ function updateBalance(game_name, username) {
 
 
 "=================================================="
-function sendToNet(gamename, username){ //fix
+function sendToNet(gamename, username){ //fix once clicked, 5 second stall.
 	//timestamp, block_height, previous hash, transactions, last_nonce, block_hash, ledger
 	
 	prev_hash = String(document.getElementById("blockhash").innerHTML.replace(/\s/g, ''));
