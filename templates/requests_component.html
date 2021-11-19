@@ -4,10 +4,12 @@
         <h1> Request </h1>
         <hr style="width:70%;", size="1", color=grey>
         <h2>Block hash: {{hashes[i]}}</h2>
-        <h2>Block height: {{heights[i]}}</h2>
+        <h2 style="color:rgb(0, 0, 165)">Block height: {{heights[i]}}</h2>
         
         <div class="buttonbox">
+            
             <input class="accept" type="button" value="Accept" name="accept" onclick="accept_reject('{{game_name}}', '{{username}}' , 'accept', '{{ids[i]}}')">
+            <input class="verify" type="button" value="Verify" name="verify" onclick="verify_request('{{hashes[i]}}', '{{ledgers[i]}}')">
             <input class="reject" type="button" value="Reject" name="reject" onclick="accept_reject('{{game_name}}', '{{username}}' , 'reject', '{{ids[i]}}')">
         </div>
     </div>

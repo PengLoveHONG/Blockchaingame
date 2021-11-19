@@ -29,7 +29,7 @@ $(document).ready(function() {
   
 "=================================================="
 
-function randomNonce(gamename, username, difficulty, blockhash) {
+function randomNonce(gamename, username, difficulty) {
     //check if the nonce is already in the page
 	if (document.getElementById("nonce")) {
         //if it is, remove it
@@ -39,6 +39,8 @@ function randomNonce(gamename, username, difficulty, blockhash) {
 
     var nonce = document.getElementById("noncevalue");
     var noncevalue = String(Math.floor(Math.random()*1000000));
+
+	blockhash = String(document.getElementById("blockhash").innerHTML.replace(/\s/g, ''));
 
     nonce_tag = document.createElement("output");
     nonce_tag.id = "nonce";
@@ -105,11 +107,9 @@ function sendToNet(gamename, username){ //fix
 
 	//make an ajax call to update the nonce hash value so it 
 	// is dynamic with the new hashes
-	
-
-
-
 }
+
+"=================================================="
 
 "=================================================="
 function queryForIncoming(game_name, username) {
@@ -246,7 +246,13 @@ function accept_reject(game_name, username, choice, id) {
 			$(flip_box).replaceWith(data);
 		}
 	});
+}
 
+
+function verify_request(hash, ledger) {
+	console.log("clicked")
+	console.log(hash);
+	console.log(ledger);
 
 
 }

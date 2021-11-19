@@ -168,7 +168,8 @@ def recieve_block_api(game_name, username):
     heights = blocks[0]
     hashes = blocks[1]
     ids = blocks[2]
-    return(jsonify("", render_template("requests_component.html", game_name=game_name, username=username, heights=heights, hashes=hashes, ids=ids)))
+    ledgers = blocks[3]
+    return(jsonify("", render_template("requests_component.html", game_name=game_name, username=username, heights=heights, hashes=hashes, ids=ids, ledgers=ledgers)))
 
 @application.route("/api_accept_reject/<game_name>/<username>/<choice>/<id>", methods=["POST","GET"]) #api to accept or reject a request for ajax
 def accept_reject_api(game_name, username, choice, id):
@@ -188,15 +189,13 @@ def accept_reject_api(game_name, username, choice, id):
     ledger = block[3]
     return(jsonify("", render_template("block_component.html", blockchain_message=blockchain_message, blockchain_hash=blockchain_hash, blockchain_height=blockchain_height, ledger=ledger)))
     
-        
-
-
 
 
 if __name__ == "__main__":
     # turn debug off for prodcution deployment
     application.run(debug=True, host='0.0.0.0')
 
+#Explore local storage for some of the data, it might be easier than constant queries
 
 
 

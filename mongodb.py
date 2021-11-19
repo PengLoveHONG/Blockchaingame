@@ -36,7 +36,7 @@ def random_matrix_connection(n_users,connection_quality, users_list): #randomly 
     return user_dict
 
 #print(random_matrix_connection(10,0.5,['a','b','c','d','e','f','g','h','i','j']))
-
+#simulate the network on the blockchain
 
 
 
@@ -268,6 +268,7 @@ def new_block_requests(game_name, username):
     heights = []
     block_hashes = []
     block_ids = []
+    ledgers = []
     for request in requests:
         #print(request)
         #grab the value of the block height in the dictionary
@@ -277,8 +278,11 @@ def new_block_requests(game_name, username):
         #print(type(block_height))
         heights.append(block_height)
         block_hashes.append(request["block_hash"])
+        ledger = request["ledger"]
+        ledgers.append(ledger)
+
     
-    return (heights, block_hashes, block_ids)
+    return (heights, block_hashes, block_ids, ledgers)
     
     
 def remove_block(game_name, username, id):
