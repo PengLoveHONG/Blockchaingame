@@ -52,7 +52,7 @@ def play():
                 return render_template('play.html', error=error)
             else:
                 game_creation(username, game_name_create, difficulty, connection)
-                return redirect(url_for('lobby', game_name=game_name_create, username=username, difficulty=difficulty, connection=connection, connection_slider=connection_slider))
+                return redirect(url_for('lobby', game_name=game_name_create, username=username, difficulty=difficulty, connection=connection))
         
         if game_name_join != "NA":
             if game_join(username, game_name_join) == False: #adds name to db
