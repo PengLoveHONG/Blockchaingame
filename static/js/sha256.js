@@ -29,6 +29,7 @@ $(document).ready(function() {
   
 "=================================================="
 
+
 function randomNonce(gamename, username, difficulty) {
     //check if the nonce is already in the page
 	if (document.getElementById("nonce")) {
@@ -62,7 +63,8 @@ function randomNonce(gamename, username, difficulty) {
 	if (hash_value.slice(0, difficulty.length) === String(difficulty)) {
 		alert("You found a block!");
 		updateBalance(gamename, username);
-	}
+	};
+
 
 };
 
@@ -92,7 +94,15 @@ function sendToNet(gamename, username){ //fix once clicked, 5 second stall.
 	nonce = nonce.replace(prev_hash, "");
 	nonce = nonce.replace(/<br>/g, '');
 
-	
+	setTimeout(function(){
+		//set loader display to flex for 5 seconds
+		$(loader).css("display", "flex");
+		//set the loader to display none after 5 seconds
+		setTimeout(function(){
+			$(loader).css("display", "none");
+		}
+		, 3000);
+	});
 	//console.log(hash);
 	//console.log(nonce);
 
