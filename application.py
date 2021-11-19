@@ -46,7 +46,7 @@ def play():
         if game_name_create != "NA":
             difficulty = request.form['difficulty']
             connection = request.form['connection']
-            connection_slider = request.form['slider']
+            #connection_slider = request.form['slider']
             if (game_creation(username, game_name_create, difficulty, connection) == False):
                 error = "Game name already exists"
                 return render_template('play.html', error=error)
