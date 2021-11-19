@@ -75,10 +75,10 @@ def play():
     
 
 
-@application.route('/lobby/<game_name>/<username>/<difficulty>/<connection>/<connection_slider>', methods=["POST", "GET"]) #CREATE A FUNCTION THAT ALTERS THE USERNAME URL SO PEOPLE CANNOT ENTER OTHERS GAME BY NAME
-def lobby(game_name, username, difficulty, connection, connection_slider):
+@application.route('/lobby/<game_name>/<username>/<difficulty>/<connection>', methods=["POST", "GET"]) #CREATE A FUNCTION THAT ALTERS THE USERNAME URL SO PEOPLE CANNOT ENTER OTHERS GAME BY NAME
+def lobby(game_name, username, difficulty, connection):
     list_of_players = user_query(game_name)
-    return render_template('lobby.html', username=username, game_name=game_name, list_of_players=list_of_players, difficulty=difficulty, connection=connection, connection_slider=connection_slider)
+    return render_template('lobby.html', username=username, game_name=game_name, list_of_players=list_of_players, difficulty=difficulty, connection=connection)
     
 
 @application.route('/game/<game_name>/<username>', methods=["POST", "GET"])
