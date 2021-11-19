@@ -1,16 +1,20 @@
 <div class='flip_box' id='flip_box'>
 
     <div class="front" id="block">
-        <p> Blockchain Message</p>
-        <h2> {{blockchain_message}} </h2>
+        <br>
         <p> Blockchain Hash</p>
         <h2 id="blockhash"> {{blockchain_hash}} </h2>
+        <br>
         <h2 id="blockheight" style="color:darkblue"> Blockchain Height: {{blockchain_height}} </h2>
     </div>
 
     <div class='back'>
     <h1 class='b_headline'>Ledger</h1>
-    <p class='b_text'>{{ledger}}</p>
+    <p class='b_text'>
+        <textarea readonly class="scrollabletextbox">
+            {{ledger}}
+        </textarea>
+    </p>
     </div>
 
 </div>
