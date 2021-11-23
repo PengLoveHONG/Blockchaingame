@@ -90,7 +90,6 @@ def game(game_name, username):
     #each player has their own blockchain ledger
     
     #this is where the matrix player algo is created
-    
 
     balance = balance_query(username, game_name)
     players=user_query(game_name)[0]

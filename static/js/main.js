@@ -9,8 +9,14 @@ function createButton() {
     if (document.getElementById("difficulty")) {
         document.getElementById("difficulty").remove();
     };
-    if (document.getElementById("connection")) {
-        document.getElementById("connection").remove();
+    if (document.getElementById("slider")) {
+        document.getElementById("slider").remove();
+    };
+    if (document.getElementById("h2_connection")) {
+        document.getElementById("h2_connection").remove();
+    };
+    if (document.getElementById("slider_output")) {
+        document.getElementById("slider_output").remove();
     };
     
 
@@ -62,6 +68,7 @@ function createButton() {
     //add a h2 
     h2 = document.createElement("h2");
     h2.setAttribute("class", "h2_connection");
+    h2.setAttribute("id", "h2_connection");
     h2.innerHTML = "Select the connection quality";
     document.getElementById("user-box").appendChild(h2);
 
@@ -106,8 +113,14 @@ function joinButton() {
     if (document.getElementById("difficulty")) {
         document.getElementById("difficulty").remove();
     };
-    if (document.getElementById("connection")) {
-        document.getElementById("connection").remove();
+    if (document.getElementById("slider")) {
+        document.getElementById("slider").remove();
+    };
+    if (document.getElementById("h2_connection")) {
+        document.getElementById("h2_connection").remove();
+    };
+    if (document.getElementById("slider_output")) {
+        document.getElementById("slider_output").remove();
     };
     
 
@@ -141,6 +154,7 @@ function ready(gamename, username, connection) {
 
 
 // ================================================================ //
+
 
 //ajax request call to database bringing the data in somesort of interval, asynchronous calls
 //xml https requests = fetch api, promises, 

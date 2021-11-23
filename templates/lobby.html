@@ -101,7 +101,7 @@
                         loadPlayerAjax('{{game_name}}');
                         loadPlayerNum('{{game_name}}');
                         game_start('{{game_name}}', '{{username}}');
-                    }, 2000)
+                    }, 2500)
 
                     function loadPlayerAjax(game_name) {
                         $.ajax({
@@ -133,6 +133,8 @@
                             //on success redirect to game
                             success: function(data) {
                                 if (data == "success") {
+                                    console.log(data);
+
                                     window.location.href = `/game/${game_name}/${username}`;
                                 }
                                 else {
@@ -155,7 +157,9 @@
                 {% endfor %}
             </div>
         </div>
+
     </div>
+
 </body>
 
 </html>
