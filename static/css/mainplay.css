@@ -88,6 +88,8 @@ body {
 
 .login-box .user-box {
   position: relative;
+  width: 80%;
+  margin: 0 auto;
 }
 
 .login-box .user-box input[type="text"] {

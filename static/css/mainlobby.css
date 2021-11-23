@@ -236,3 +236,8 @@ body {
   height: 80px;
   filter: invert(100%);
 }
+
+.grid-container #True {
+  background-color: rgba(83, 236, 96, 0.445);
+}
+

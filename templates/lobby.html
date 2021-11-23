@@ -40,8 +40,8 @@
                     <p>Game ID</p>
                 </div> 
                 
-                <button class="next_button" onclick="window.location.href='/game/{{game_name}}/{{username}}'"> <!-- add connectionslider here-->
-                    Start
+                <button class="next_button" onclick="ready('{{game_name}}', '{{username}}', '{{connection}}')"> <!-- onclick="window.location.href='/game/{{game_name}}/{{username}}'"-->
+                    Ready
                 </button>
 
             </div>
@@ -68,7 +68,7 @@
                 <div class="content_wrapper">
                     <img src="/static/img/connection.png" class="connectionimg">
                 </div>
-                <h2>To mimic a Bitcoin network, miners are connected to {{connection}} other miners.</h2>
+                <h2>To replicate a live network, miners are connected to {{connection_per}}% of all miners in the network.</h2>
             </div>
             <div class="box3">
 
@@ -99,7 +99,8 @@
                 $(function(){
                     window.setInterval(function(){
                         loadPlayerAjax('{{game_name}}');
-                        loadPlayerNum('{{game_name}}')
+                        loadPlayerNum('{{game_name}}');
+                        game_start('{{game_name}}', '{{username}}');
                     }, 2000)
 
                     function loadPlayerAjax(game_name) {
@@ -124,6 +125,23 @@
                                     }
                         });
                     }
+                    function game_start(game_name, username) {
+                        $.ajax({
+                            url: `/api_gamestart/${game_name}/${username}`,
+                            type: "POST",
+                            datatype: "json",
+                            //on success redirect to game
+                            success: function(data) {
+                                if (data == "success") {
+                                    window.location.href = `/game/${game_name}/${username}`;
+                                }
+                                else {
+                                    console.log("Game is not ready yet");
+                                }
+                            }
+                        });
+                    }
+
                 });
 
                 

@@ -9,16 +9,16 @@ import numpy as np
 
 from mongdb_connectionstring import connection_string
 "============================================================================"
-def random_matrix_connection(n_users,connection_quality, users_list): #randomly generate a matrix of connections between users using numpy
 
+def random_matrix_connection(n_users,connection_quality, users_list): #randomly generate a matrix of connections between users using numpy
+    import numpy as np
     user_dict ={}
     matrix = np.random.rand(n_users,n_users)
     count = 0
     for i in range(n_users):
         for j in range(n_users):
             if i == j:
-                matrix[i][j] = 1
-                count += 1
+                matrix[i][j] = 2
             else:
                 if matrix[i][j] > (1 - connection_quality) * (1 + 1 / float(n_users)):
                     matrix[i][j] = 1
@@ -27,6 +27,8 @@ def random_matrix_connection(n_users,connection_quality, users_list): #randomly 
                     matrix[i][j] = 0
     for k in range(0,len(matrix.tolist())):
         for h in range(len(matrix[k])):
+            if matrix[k][h] == 2.0:
+                pass
             if matrix[k][h] == 1.0:
                 if users_list[k] in user_dict:
                     user_dict[users_list[k]].append(users_list[h])
@@ -36,13 +38,25 @@ def random_matrix_connection(n_users,connection_quality, users_list): #randomly 
     return user_dict
 
 #print(random_matrix_connection(10,0.5,['a','b','c','d','e','f','g','h','i','j']))
+
+#matrix = (random_matrix_connection(10,0.5,['a','b','c','d','e','f','g','h','i','j']))
+#print(matrix['a'])
 #simulate the network on the blockchain
 
+#connected_players = random_matrix_connection(5, 1, ['thomas1', 'thaosm1','dasda','asgaga','awtqwtq'])
+#print(connected_players['thomas1'])
 
+def add_connections_to_db(game_name, connected_players, players):
+    cluster = MongoClient(connection_string, tlsCAFile=certifi.where())
 
+    db=cluster["game_database"]
+    collection = db[game_name]
+    for i in range(len(players)): 
+        #update the connected_to field in the db with the connected players
+        collection.update_one({"username": players[i]}, {"$set": {"connected_to": connected_players[players[i]]}})
+    
 
-
-
+#add_connections_to_db("test", connected_players, ['thomas1', 'thaosm1'])
 "============================================================================"
 
 def game_creation(username, game_name, difficulty, connection):
@@ -64,9 +78,43 @@ def game_creation(username, game_name, difficulty, connection):
                                 "username": username,
                                 "balance": 5,
                                 "difficulty": difficulty,
-                                "connection": connection,})
+                                "connection": connection,
+                                "ready": False,
+                                "game": False, #game in session?
+                                "connected_to": [],
+                                })
         return ("added " + username)
 
+def game_status(game_name):
+    cluster = MongoClient(connection_string, tlsCAFile=certifi.where())
+
+    db=cluster["game_database"]
+    collection = db[game_name]
+    game_status = collection.find_one({"game_name": game_name}, {"game": 1, "_id": 0})
+    return game_status["game"]
+
+def game_start(game_name):
+    cluster = MongoClient(connection_string, tlsCAFile=certifi.where())
+
+    db=cluster["game_database"]
+    collection = db[game_name]
+    collection.update_many({"game": False}, {"$set": {"game": True}})
+    return "game started"
+
+
+def all_ready(game_name): #checks if every player in the game is ready
+    cluster = MongoClient(connection_string, tlsCAFile=certifi.where())
+
+    db=cluster["game_database"]
+    collection = db[game_name]
+    ready_states = list(collection.find({}, {"ready": 1, "_id": 0}))
+    ready_states = list(map(lambda x: x["ready"], ready_states))
+    if all(ready_states):
+        return True
+    else:
+        return False
+
+#print(all_ready("test"))
 "============================================================================"
 
 def game_join(username, game_name):
@@ -89,7 +137,11 @@ def add_name(username, game_name, difficulty, connection):
                             "username": username,
                             "balance": 5,
                             "difficulty": difficulty,
-                            "connection": connection,})
+                            "connection": connection,
+                            "ready": False,
+                            "game": False, #game in session?
+                            "connected_to": [], 
+                            })
 
     return ("added " + username)
 
@@ -102,8 +154,14 @@ def user_query(game_name):
     collection = db[game_name]
     # query "names" field into a list
     names = list(collection.find({}, {"username": 1, "_id": 0}))
-    return (list(map(lambda x: x["username"], names)))
+    names = list(map(lambda x: x["username"], names))
 
+    ready_states = list(collection.find({}, {"ready": 1, "_id": 0}))
+    ready_states = list(map(lambda x: x["ready"], ready_states))
+
+    return (names, ready_states)
+
+#print(user_query("test")[0])
 
 def balance_query(username, game_name):
     cluster = MongoClient(connection_string, tlsCAFile=certifi.where())
@@ -124,6 +182,14 @@ def game_info_query(game_name):
     connection = collection.find_one({"game_name": game_name}, {"connection": 1, "_id": 0})
     return (difficulty["difficulty"], connection["connection"])
 
+def set_ready(game_name, player):
+    cluster = MongoClient(connection_string, tlsCAFile=certifi.where())
+
+    db=cluster["game_database"]
+    collection = db[game_name]
+    collection.update_one({"username": player}, {"$set": {"ready": True}})
+    return True
+
 "============================================================================"
 
 def init_blockchain(game_name, difficulty, connection, players): #user_query sends players list into this
@@ -134,8 +200,6 @@ def init_blockchain(game_name, difficulty, connection, players): #user_query sen
     #iterate through players name and give them their own version of the blockchain
     #check if the db[game_name] exists
     print(db.list_collection_names())
-
-
     for player in players:
         if db[player].count_documents({}) != 0:
             continue
@@ -173,7 +237,7 @@ def get_block_message_hash(game_name, username):
 
     return (block_message["previous_hash"], block_hash["block_hash"], block_height["block_height"], ledger["ledger"])
 
-def add_block(game_name, from_username, to_username, previous_hash, last_nonce):
+def add_block(game_name, from_username, to_username:list, previous_hash, last_nonce):
 
     
     cluster = MongoClient(connection_string, tlsCAFile=certifi.where())
@@ -204,19 +268,21 @@ def add_block(game_name, from_username, to_username, previous_hash, last_nonce):
             "ledger": new_ledger
         }}
     )
-            
-    collection = db[to_username]
-    collection.insert_one(
-        {"username": from_username,
-        "timestamp": timestamp,
-        "block_height": block_height,
-        "previous_hash": previous_hash,
-        "transactions": [],
-        "last_nonce": last_nonce,
-        "block_hash": block_hash,
-        "ledger": new_ledger
-        }
-    )
+    
+    for i in range(len(to_username)):
+
+        collection = db[to_username[i]]
+        collection.insert_one(
+            {"username": from_username,
+            "timestamp": timestamp,
+            "block_height": block_height,
+            "previous_hash": previous_hash,
+            "transactions": [],
+            "last_nonce": last_nonce,
+            "block_hash": block_hash,
+            "ledger": new_ledger
+            }
+        )
 
     return (previous_hash, block_hash, block_height, new_ledger)
 
@@ -233,12 +299,17 @@ def update_balance(game_name, username, amount):
 
 "============================================================================"
 #takes all the players and determines a random pick
-def pick_next(game_name, username):
-    players = user_query(game_name)
-    players = [i for i in players if i != username]
-    chosen = random.choice(tuple(players))
+def find_connected_players(game_name, username):
+    #find connected to field in the game_database
+    cluster = MongoClient(connection_string, tlsCAFile=certifi.where())
 
-    return chosen
+    db=cluster["game_database"]
+    collection = db[game_name]
+    connected_players = collection.find_one({"username": username}, {"connected_to": 1, "_id": 0})
+    connected_players = connected_players["connected_to"]
+    return connected_players
+
+#print(find_connected_players("test", "thoams"))
 
 
 def current_block(game_name, username):
@@ -316,9 +387,9 @@ def accept_block(game_name, username, id):
                             "last_nonce": last_nonce, 
                             "block_hash": block_hash, 
                             "ledger": ledger}})
-    
 
     return
+
 
 #print(game_info_query("test"))
 #print(user_query("test"))

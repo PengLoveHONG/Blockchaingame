@@ -58,41 +58,6 @@ function createButton() {
     option4.innerHTML = "0000";
     select.appendChild(option4);
 
-    // select drop down for number of connections
-    select_conn = document.createElement("select");
-    select_conn.setAttribute("id", "connection");
-    select_conn.name = "connection";
-    select_conn.value = "Number of connections per miner"
-    select_conn.setAttribute("required", "");
-    select_conn.setAttribute("placeholder", "Select a Difficulty");
-    select_conn.setAttribute("size", "1");
-    document.getElementById("user-box").appendChild(select_conn);
-
-    option_conn = document.createElement("option");
-    option_conn.setAttribute("value", "default_connection");
-    option_conn.innerHTML = "Select network connection level";
-    select_conn.appendChild(option_conn);
-
-    option1_conn = document.createElement("option");
-    option1_conn.setAttribute("value", "all");
-    option1_conn.innerHTML = "Instant connection to everyone";
-    select_conn.appendChild(option1_conn);
-
-    option2_conn = document.createElement("option");
-    option2_conn.setAttribute("value", "ten");
-    option2_conn.innerHTML = "10 connections";
-    select_conn.appendChild(option2_conn);
-
-    option3_conn = document.createElement("option");
-    option3_conn.setAttribute("value", "five");
-    option3_conn.innerHTML = "5 connections";
-    select_conn.appendChild(option3_conn);
-
-    option4_conn = document.createElement("option");
-    option4_conn.setAttribute("value", "two");
-    option4_conn.innerHTML = "2 connections";
-    select_conn.appendChild(option4_conn);
-
     
     //add a h2 
     h2 = document.createElement("h2");
@@ -107,7 +72,7 @@ function createButton() {
     select_slider.value = "1.0";
     select_slider.min = "0";
     select_slider.max = "1.0";
-    select_slider.step = "0.01";
+    select_slider.step = "0.001";
     select_slider.setAttribute("required", "");
     select_slider.setAttribute("size", "2");
     // add oninput="this.nextElementSibling.value = this.value" to select_slider
@@ -160,6 +125,19 @@ function joinButton() {
 };
 // ================================================================ //
 
+function ready(gamename, username, connection) {
+    $.ajax({
+        type: "POST",
+        url: `/api_ready/${gamename}/${username}/${connection}`,
+        datatype: "json",
+        success: function(data) {
+            console.log(data);
+        }
+    });
+
+        
+
+};
 
 
 // ================================================================ //

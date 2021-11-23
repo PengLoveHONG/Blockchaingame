@@ -1,7 +1,7 @@
 
 <div class="grid-container" id="playergrid">
     {% for i in range(list_of_players|length) %}
-    <div class="grid-item">
+    <div class="grid-item" id="{{ready_states[i]}}">
         <h2>{{list_of_players[i]}}</h2>
     </div>
     {% endfor %}
