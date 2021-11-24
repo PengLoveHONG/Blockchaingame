@@ -59,8 +59,8 @@ def play():
             if game_join(username, game_name_join) == False: #adds name to db
                 return render_template('play.html', error="Game does not exist")
             else:
-                if (username in user_query(game_name_join)):
-                    return render_template('play.html', error="Username has been taken")
+                if (username in user_query(game_name_join)[0]):
+                    return render_template('play.html', error="Username has been taken") 
                 elif (game_status(game_name_join) != False): #checks if game is already started
                     return render_template('play.html', error="Game is already in session")
                 else:
